@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 //constants
@@ -42,38 +41,46 @@ int main(void)
 		}
 	}
 
-	//output array
-	for (int column = 1; column < COLUMNS; column++)
-	{
-		displaySeatColumn(array, column);
-		cout << endl;
-	}
-	cout << endl;
-
-	//input
 	while (true)
 	{
-		cout << "Enter a seat or Q to quit: ";
-		cin >> inputInt >> inputChar;
-		if (cin.fail())
-			return(0);
-		cout << inputInt << inputChar;
+		//output array
+		for (int column = 1; column < COLUMNS; column++)
+		{
+			displaySeatColumn(array, column);
+			cout << endl;
+		}
+		cout << endl;
 
-		//checks if input is valid
-		row = findRowIndex((int)inputChar);
-		column = findSeatIndex(inputInt);
-		if (row != -1 && column != -1 && array[column][row] != 'X')
-			cout << "Invalid seat.  Please try again.";
+		//input
+		while (true)
+		{
+			cout << "Enter a seat or Q to quit: ";
+			cin >> inputInt >> inputChar;
+			if (cin.fail())
+				return(0);
+
+			//checks if input is valid
+			row = findRowIndex(inputInt);
+			column = findSeatIndex(inputChar);
+			if (row == -1 || column == -1 || array[5 - column][row] == 'X')
+				cout << "Invalid seat.  Please try again.\n";
+			else if(row == 13 && column == 4)
+				cout << "Invalid seat.  Please try again.\n";
+			else if (row == 13 && column == 3)
+				cout << "Invalid seat.  Please try again.\n";
+			else
+				break;
+		}
+
+		//sets the seat to X
+		array[5 - column][row] = 'X';
+		cout << endl;
 	}
-
-	//sets the seat to X
-	array[column][row] = 'X'
 }
 
 int findRowIndex(int thisRow)
 {
-	thisRow -= 64;
-	if (thisRow >= 1 && thisRow <= ROWS)
+	if (thisRow >= 1 && thisRow < ROWS)
 		return(thisRow);
 	else
 		return(-1);
@@ -81,8 +88,9 @@ int findRowIndex(int thisRow)
 
 int findSeatIndex(char thisSeat)
 {
-	if (thisSeat >= 1 && thisSeat <= COLUMNS)
-		return(thisSeat);
+	int column = thisSeat - 64;
+	if (column >= 1 && column < COLUMNS)
+		return(column);
 	else
 		return(-1);
 }
